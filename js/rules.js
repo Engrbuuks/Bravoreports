@@ -9,7 +9,7 @@ window.RULES = {
   impressionClasses: [
     { key: 'positive', label: 'Positive', color: '#22A04B', def: 'Committed to vote for {name}' },
     { key: 'volunteer', label: 'Volunteer', color: 'THEME', def: 'Willing to work / mobilise for the campaign' },
-    { key: 'undecided', label: 'Undecided', color: '#F2A81D', def: 'Not committed, hung up or conditional support' },
+    { key: 'undecided', label: 'Undecided', color: '#F2A81D', def: 'Not committed, hung up or conditional support (read from Follow up feedback)' },
     { key: 'followup', label: 'Follow up', color: '#3B82F6', def: 'Needs a call back (network, busy, language, noise)' },
     { key: 'negative', label: 'Negative', color: '#E23B4E', def: 'Opposed / other party' },
     { key: 'inapplicable', label: 'Inapplicable', color: '#9AA3B2', def: "Wrong number, can't vote, not resident or not in town" }
@@ -28,7 +28,6 @@ window.RULES = {
   statusMap: {
     POSITIVE: 'positive', SUPPORTIVE: 'positive', SUPPORT: 'positive',
     VOLUNTEER: 'volunteer', MOBILISER: 'volunteer', MOBILIZER: 'volunteer',
-    UNDECIDED: 'undecided', INDECISIVE: 'undecided', NEUTRAL: 'undecided',
     FOLLOWUP: 'followup', CALLBACK: 'followup', BUSY: 'followup',
     NEGATIVE: 'negative', OPPOSED: 'negative',
     INAPPLICABLE: 'inapplicable', WRONGNUMBER: 'inapplicable', NOTAPPLICABLE: 'inapplicable',
@@ -40,7 +39,10 @@ window.RULES = {
   },
 
   /* Feedback screening: FOLLOW-UP and NEGATIVE calls are re-read and moved to
-     the class their feedback actually describes. Checked in this order. */
+     the class their feedback actually describes. Checked in this order.
+     The application has no UNDECIDED disposition: Undecided voters are the
+     FOLLOW-UP calls whose feedback shows they hung up, are not sure, or attach
+     conditions, exactly as in the Kwara audit. */
   reclassify: {
     inapplicable: ['wrong number', 'wrong no', 'not the person', 'not resident', 'not living', 'relocated', 'moved to', 'not in town', 'out of town', 'travelled', 'traveled', "can't vote", 'cant vote', 'cannot vote', 'can not vote', 'no pvc', "doesn't have pvc", 'does not have pvc', 'not registered', 'not a registered', 'deceased', 'died', 'dead', 'underage', 'under age', 'minor'],
     negative: ['other party', 'another party', 'pdp', 'labour party', ' lp ', 'adc', 'apga', "won't vote", 'will not vote', 'not voting for', 'against him', 'against her', 'does not support', "doesn't support", 'opposed', 'opposition'],

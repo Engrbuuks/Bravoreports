@@ -55,6 +55,7 @@ Open `js/profiles.js`, copy one profile block and change:
 
 * `statusMap`: application status → one of the 11 classes. Add new statuses here so nobody has to map them by hand.
 * `reclassify`: keywords used to move FOLLOW UP and NEGATIVE calls to the class their feedback describes. Team leads can switch this off per report.
+  The application has no UNDECIDED disposition. Undecided voters are the FOLLOW UP calls whose feedback shows they hung up, are not sure, or set conditions. If screening is switched off, Undecided shows as 0.
 * `needs` and `grievances`: keyword lists behind the *Needs & requests* chart and the *Grievances* table.
 * Thresholds:
   * short positive seconds
