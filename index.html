@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bravo Daily Report Generator</title>
+<link rel="icon" href="assets/common/bravo.png">
+<link rel="stylesheet" href="css/report.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><img src="assets/common/bravo.png" alt=""><div><b>BRAVO AEMS</b><span>Daily Report Generator</span></div></div>
+
+    <section class="step">
+      <h3><i>1</i> Centre</h3>
+      <label>Candidate / centre<select id="profile"></select></label>
+    </section>
+
+    <section class="step">
+      <h3><i>2</i> Call export</h3>
+      <label class="drop" id="dropCalls"><input type="file" id="calls" accept=".csv,text/csv"><span id="callsName">Choose or drop the CallSessions CSV</span></label>
+      <div id="fileInfo" class="info"></div>
+      <details class="opt">
+        <summary>Telco match file (optional)</summary>
+        <p>A CSV with <b>Phone</b>, <b>Gender</b> and <b>Tier</b> columns. When supplied, the audit gets the gender and socio economic tier page.</p>
+        <label class="drop small"><input type="file" id="telco" accept=".csv,text/csv"><span id="telcoName">Choose telco CSV</span></label>
+      </details>
+    </section>
+
+    <section class="step" id="unknownBox" hidden>
+      <h3><i>!</i> New statuses found</h3>
+      <p class="note">These statuses are not yet known to the generator. Tell it what each one means; calls left as "Leave out" are not counted.</p>
+      <div id="unknownList"></div>
+    </section>
+
+    <section class="step">
+      <h3><i>3</i> Settings</h3>
+      <div class="grid2">
+        <label>Day number<input type="number" id="day" min="1" value="1"></label>
+        <label>Report generated<input type="date" id="generated"></label>
+        <label>Airtime ₦ per minute<input type="number" id="rate" step="0.01"></label>
+      </div>
+      <label class="check"><input type="checkbox" id="reclass" checked> Screen FOLLOW UP and NEGATIVE calls by their feedback</label>
+    </section>
+
+    <section class="step">
+      <button id="build" class="primary" disabled>Generate reports</button>
+      <div class="dl">
+        <button id="pdfAvoc" disabled>Download client report (PDF)</button>
+        <button id="pdfAudit" disabled>Download internal audit (PDF)</button>
+      </div>
+      <p class="note">In the print window choose <b>Save as PDF</b>, layout <b>Landscape</b>, margins <b>None</b> and tick <b>Background graphics</b>.</p>
+    </section>
+
+    <p class="privacy">Everything runs inside this browser. The call file is never uploaded anywhere.</p>
+  </aside>
+
+  <main class="main">
+    <div class="bar">
+      <div class="tabs"><button data-tab="avoc" class="on">Client report <small id="nAvoc"></small></button><button data-tab="audit">Internal audit <small id="nAudit"></small></button></div>
+      <div class="tools">
+        <label class="check"><input type="checkbox" id="editMode" checked> Highlight editable text</label>
+        <label>Zoom <input type="range" id="zoom" min="40" max="110" value="75"></label>
+      </div>
+    </div>
+    <div id="warnings"></div>
+    <div class="stage" id="stage">
+      <div class="empty" id="empty">
+        <img src="assets/common/bravo.png" alt="">
+        <h2>Upload the day's call export to begin</h2>
+        <p>Pick the centre, drop the CallSessions CSV exported from the application, then press <b>Generate reports</b>. Every coloured text box in the reports can be clicked and edited before you download.</p>
+      </div>
+      <div class="report editing" id="rep-avoc" data-report="avoc"></div>
+      <div class="report editing" id="rep-audit" data-report="audit" hidden></div>
+    </div>
+  </main>
+</div>
+
+<script src="js/vendor/papaparse.min.js"></script>
+<script src="js/profiles.js"></script>
+<script src="js/rules.js"></script>
+<script src="js/metrics.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
