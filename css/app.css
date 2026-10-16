@@ -15,7 +15,7 @@ body { font-family: 'Poppins', Arial, sans-serif; color: var(--ui); background: 
 .step h3 i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 11.5px; }
 #unknownBox h3 i { background: #E08A00; }
 label { display: block; font-size: 11.5px; color: var(--uiMute); margin-bottom: 9px; }
-select, input[type=number], input[type=date] { display: block; width: 100%; margin-top: 4px; font: inherit; font-size: 13px; color: var(--ui); padding: 7px 9px; border: 1px solid var(--uiLine); border-radius: 7px; background: #fff; }
+select, input[type=number], input[type=date], input[type=text] { display: block; width: 100%; margin-top: 4px; font: inherit; font-size: 13px; color: var(--ui); padding: 7px 9px; border: 1px solid var(--uiLine); border-radius: 7px; background: #fff; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
 .check { display: flex; gap: 8px; align-items: flex-start; color: var(--ui); font-size: 12px; }
 .check input { margin-top: 2px; }
@@ -53,6 +53,7 @@ button.primary { width: 100%; background: var(--accent); color: #fff; border: 0;
 .warn { background: #FFF6E0; border: 1px solid #F2D28A; color: #6A4C00; border-radius: 8px; padding: 8px 12px; font-size: 12px; margin-bottom: 6px; }
 .stage { flex: 1; overflow: auto; padding: 22px; }
 .stage .page { margin: 0 auto 22px; box-shadow: 0 6px 24px rgba(30, 15, 70, .16); }
+.stage .dpage { margin: 0 auto 22px; box-shadow: 0 6px 24px rgba(30, 15, 70, .16); }
 .report { zoom: var(--zoom, .75); }
 .empty { max-width: 520px; margin: 70px auto; text-align: center; color: var(--uiMute); }
 .empty img { height: 90px; opacity: .9; }
@@ -73,6 +74,7 @@ button.primary { width: 100%; background: var(--accent); color: #fff; border: 0;
   .report[hidden] { display: none !important; }
   body.print-avoc #rep-audit, body.print-audit #rep-avoc { display: none !important; }
   body.print-avoc #rep-avoc, body.print-audit #rep-audit { display: block !important; }
-  .stage .page { margin: 0; box-shadow: none; }
+  .stage .page, .stage .dpage { margin: 0; box-shadow: none; }
   .editing .ed:hover, .editing .ed:focus { box-shadow: none !important; }
 }
+input[readonly] { background: #F4F2F9; color: var(--accent); font-weight: 600; }

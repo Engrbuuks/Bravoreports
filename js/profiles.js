@@ -4,6 +4,10 @@
   change the values, and put its images in assets/profiles/<id>/.
 
   airtimeRatePerMinute : naira charged per minute of talk time
+  callStartDate        : the first day of live calls (YYYY-MM-DD); the report's
+                         Day number is counted from it, Monday to Saturday
+  candidateFace        : a square head and shoulders photo used wherever a
+                         small round or square portrait is shown
   lgas                 : the LGAs in the constituency, with the colour used for
                          them in every chart (spelling is matched loosely to the
                          Location column of the export)
@@ -21,6 +25,8 @@ window.PROFILES = [
     constituency: 'Cross River South Senatorial District',
     partyLogo: 'assets/common/apc.png',
     candidateImage: 'assets/profiles/ekpenyong/candidate.png',
+    candidateFace: 'assets/profiles/ekpenyong/face.jpg',
+    callStartDate: '2026-10-13',
     candidateImageStyle: 'framed',
     network: 'MTN',
     airtimeRatePerMinute: 10.17,
@@ -52,6 +58,8 @@ window.PROFILES = [
     constituency: 'Ilorin West / Asa Federal Constituency',
     partyLogo: 'assets/common/apc.png',
     candidateImage: 'assets/profiles/shagaya/candidate.png',
+    candidateFace: 'assets/profiles/shagaya/face.jpg',
+    callStartDate: '2026-10-02',
     candidateImageStyle: 'cutout',
     network: 'MTN',
     airtimeRatePerMinute: 10.17,

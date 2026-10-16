@@ -74,8 +74,8 @@
 .hs-bravo b { font-weight: 700; }
 .hs-photo { width: 66px; height: 66px; flex: none; align-self: flex-end; }
 .hs-photo img { width: 100%; height: 100%; object-fit: contain; object-position: bottom; }
-.hs-photo.framed { align-self: center; width: 54px; height: 58px; border-radius: 10px; overflow: hidden; border: 2.5px solid #fff; background: var(--brandSoft); }
-.hs-photo.framed img { object-fit: cover; object-position: center top; }
+.hs-photo.framed { align-self: center; width: 58px; height: 58px; border-radius: 10px; overflow: hidden; border: 2.5px solid #fff; background: var(--brandSoft); }
+.hs-photo.framed img { object-fit: cover; object-position: center 30%; }
 
 /* ---------- footer ---------- */
 .ftr {

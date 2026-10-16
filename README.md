@@ -5,6 +5,15 @@ A web page that turns the application's **CallSessions CSV export** into the two
 * **Client report (AVOC)**: 3 pages. Engagement at a glance, Where support is strongest, What voters are saying.
 * **Internal audit**: 10 pages, or 11 when a telco match file is supplied. It covers KPIs and funnel, call outcomes, time analysis, call partner output, league table, the 30 minute activity heatmap, the gender and tier profile, the three candidate pages and the ward deep dive.
 
+Both reports come in two styles, chosen under **Report style**:
+
+* **Classic (landscape)**: the original Bravo layout.
+* **Dashboard (portrait)**: a web dashboard look with a sidebar, rounded cards and a coral accent.
+
+The two styles draw every number and every sentence from the same place (`js/content.js`), so they always agree. Text you edit in one style carries over if you switch to the other.
+
+No text is ever cut off. If real feedback or an edit is too long for its box, the generator first eases the text size down slightly, then leaves out the last quotes on that page (all quotes stay on the "What voters are saying" page), so every box and every page always fits. The dashboard style uses the centre's own campaign colours from `js/profiles.js`, and each centre has a square `face.jpg` used wherever a small portrait is shown.
+
 Everything runs in the browser. The call file is never uploaded anywhere, so voter data stays on the team lead's computer.
 
 ## Using it (team leads)
@@ -13,13 +22,14 @@ Everything runs in the browser. The call file is never uploaded anywhere, so vot
 2. Pick the centre (for example *Sen. Asuquo Ekpenyong (Calabar)*).
 3. Drop the day's CallSessions CSV onto the upload box.
 4. Check the settings:
-   * Day number
+   * Calls started on (the first day of live calls; set per centre in `js/profiles.js` and editable here). The Day number is worked out from it automatically, counting Monday to Saturday, since Sunday is free.
    * Airtime ₦ per minute
+   * Report style
 5. If a box called **New statuses found** appears, say what each status means. The generator remembers your choice.
 6. Read through the reports. Every narrative box, quote and community list can be clicked and edited directly.
 7. Press **Download client report (PDF)** or **Download internal audit (PDF)**. In the print window:
    * choose **Save as PDF**
-   * set layout to **Landscape**
+   * set layout to **Landscape** for the classic style, or **Portrait** for the dashboard style
    * set margins to **None**
    * tick **Background graphics**
 
@@ -42,7 +52,7 @@ Open `js/profiles.js`, copy one profile block and change:
 
 * `id`, `label`, `candidateTitle`, `candidateName`, `shortName`, `constituency`
 * `submissionLabel`: the badge on the client report, for example *Ekpenyong's Submission*
-* `airtimeRatePerMinute`
+* `airtimeRatePerMinute`, `callStartDate`
 * `theme`: header gradient, brand colours, the accent rule, and the highlight used in narrative panels
 * `lgas`: every LGA in the constituency, each with its chart colour. Names are matched loosely against the export's Location column.
 * `candidateImage`: put the photo in `assets/profiles/<id>/`.
@@ -73,7 +83,11 @@ js/profiles.js        centres
 js/rules.js           statuses, keywords, thresholds
 js/metrics.js         every number in the reports
 js/charts.js          SVG charts
-js/pages.js           page layouts and the written commentary
+js/content.js         the KPI lists, tables and written commentary shared by both styles
+js/pages.js           classic style page layouts
+js/pages_dash.js      dashboard style page layouts
+js/fit.js             keeps every text box inside its card and every page on the paper
+css/dash.css          the dashboard style design
 js/app.js             file loading, settings, PDF download
 samples/              synthetic Calabar export and telco file for testing
 ```

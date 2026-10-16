@@ -109,7 +109,7 @@
     const t = ' ' + fb.toLowerCase() + ' ';
     return R.grievances.filter(g => hasAny(t, g.kw)).map(g => g.label);
   }
-  const STOP = new Set(['the', 'a', 'an', 'his', 'her', 'their', 'our', 'my', 'this', 'that', 'there', 'here', 'home', 'town', 'area', 'community', 'village', 'school', 'church', 'market', 'house', 'compound', 'street', 'road', 'ward', 'time', 'all', 'it', 'him', 'them', 'us', 'order', 'future', 'place', 'general', 'front', 'need', 'last', 'next', 'least', 'case', 'fact']);
+  const STOP = new Set(['the', 'a', 'an', 'his', 'her', 'their', 'our', 'my', 'this', 'that', 'there', 'here', 'home', 'town', 'area', 'community', 'village', 'school', 'church', 'market', 'house', 'compound', 'street', 'road', 'ward', 'time', 'all', 'it', 'him', 'them', 'us', 'order', 'future', 'place', 'general', 'front', 'need', 'last', 'next', 'least', 'case', 'fact', 'length', 'all', 'once', 'first', 'times', 'detail', 'details']);
   const BREAK = new Set(['and', 'or', 'but', 'did', 'does', 'do', 'not', 'is', 'was', 'are', 'were', 'has', 'have', 'had', 'to', 'for', 'so', 'he', 'she', 'they', 'we', 'it', 'because', 'since', 'with', 'who', 'which', 'when', 'if', 'then', 'that', 'will', 'would', 'should', 'can', 'could', 'be', 'been', 'needs', 'need', 'of', 'on', 'by', 'as', 'also', 'still', 'too', 'very', 'please', 'again', 'yet', 'now', 'there', 'months', 'years', 'since', 'last']);
   function communitiesIn(fb) {
     const out = [];
@@ -310,7 +310,9 @@
 
     // quotes: mix of positive and undecided, longest informative first, varied wards
     const pool = recs.filter(x => x.imp && x.hasFb && isQuotable(x.fb) && ['positive', 'volunteer', 'undecided', 'negative'].includes(x.cls));
-    pool.sort((a, b) => (needsOf(b.fb).length + grievancesOf(b.fb).length) - (needsOf(a.fb).length + grievancesOf(a.fb).length) || b.fb.length - a.fb.length);
+    /* Most informative first; among equals prefer quotes of a readable length (about 140 characters). */
+    const lenCost = q => Math.abs(Math.min(q.fb.length, 400) - 140);
+    pool.sort((a, b) => (needsOf(b.fb).length + grievancesOf(b.fb).length) - (needsOf(a.fb).length + grievancesOf(a.fb).length) || lenCost(a) - lenCost(b));
     const picked = []; const usedWard = {}; const seen = new Set();
     const grams = t => { const w = t.toLowerCase().replace(/[^a-z ]/g, ' ').split(/\s+/).filter(Boolean); const g = []; for (let i = 0; i + 4 <= w.length; i++) g.push(w.slice(i, i + 4).join(' ')); return g; };
     const fresh = x => !grams(x.fb).some(g => seen.has(g));

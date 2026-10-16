@@ -12,17 +12,20 @@
   function fillDefaults() {
     const p = profile(), s = (saved.byProfile || {})[p.id] || {};
     $('rate').value = s.rate ?? p.airtimeRatePerMinute;
+    $('start').value = s.start ?? p.callStartDate ?? '';
   }
   function persist() {
     try {
       saved.profile = profile().id;
       saved.byProfile = saved.byProfile || {};
-      saved.byProfile[profile().id] = { rate: +$('rate').value };
+      saved.byProfile[profile().id] = { rate: +$('rate').value, start: $('start').value };
       saved.overrides = state.overrides;
+      saved.style = $('style').value;
       localStorage.setItem('bravoReportSettings', JSON.stringify(saved));
     } catch (e) { /* storage unavailable: settings simply are not remembered */ }
   }
   state.overrides = saved.overrides || {};
+  if (saved.style) $('style').value = saved.style;
   fillDefaults();
   $('profile').addEventListener('change', () => { fillDefaults(); if (state.M) build(); });
   const today = new Date();
@@ -50,7 +53,6 @@
     $('callsName').textContent = file.name; $('dropCalls').classList.add('done');
     const dates = new Set(r.data.map(x => String(x.Date || '').slice(0, 11)));
     $('fileInfo').innerHTML = `<b>${r.data.length.toLocaleString()}</b> calls · <b>${new Set(r.data.map(x => x.Agent)).size}</b> agents · <b>${new Set(r.data.map(x => x.Location)).size}</b> LGAs · ${dates.size === 1 ? 'one call date' : `<b>${dates.size}</b> call dates`}`;
-    const dm = file.name.match(/day\s*_?(\d+)/i); if (dm) $('day').value = dm[1];
     renderUnknown();
     $('build').disabled = false;
     build();
@@ -95,6 +97,22 @@
     });
   }
 
+  /* ---------- day number ----------
+     Calls run Monday to Saturday; Sunday is free. Day 1 is the start date, and
+     each working day after it adds one, so a Monday after a weekend follows
+     straight on from the Saturday before it. */
+  function workingDay(startStr, callDate) {
+    if (!startStr || !callDate) return { n: 1, warn: startStr ? '' : 'No start date is set, so the report is marked Day 1. Set "Calls started on" to number the days.' };
+    const start = new Date(startStr + 'T00:00:00');
+    const call = new Date(callDate.getFullYear(), callDate.getMonth(), callDate.getDate());
+    const fmtD = d => d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    if (call < start) return { n: 1, warn: `The calls in this file (${fmtD(call)}) are before the start date (${fmtD(start)}), so the report is marked Day 1. Check "Calls started on".` };
+    let n = 0;
+    for (let d = new Date(start); d <= call; d.setDate(d.getDate() + 1)) if (d.getDay() !== 0) n++;
+    if (call.getDay() === 0) return { n: n + 1, warn: `These calls were made on a Sunday (${fmtD(call)}), which is normally a free day. The report is numbered Day ${n + 1}, following the Saturday before.` };
+    return { n, warn: '' };
+  }
+
   /* ---------- build ---------- */
   function captureEdits() {
     document.querySelectorAll('.report .ed[data-edit]').forEach(el => {
@@ -131,14 +149,25 @@
     $('warnings').innerHTML = warn.map(w => `<div class="warn">${w}</div>`).join('');
 
     const gd = $('generated').value ? new Date($('generated').value + 'T12:00:00') : new Date();
-    const out = buildReports(M, { day: +$('day').value || 1, generated: gd });
+    const dash = $('style').value === 'dash';
+    const day = workingDay($('start').value, M.callDate);
+    state.day = day.n;
+    $('day').value = 'Day ' + day.n;
+    if (day.warn) warn.push(day.warn), $('warnings').innerHTML = warn.map(w => `<div class="warn">${w}</div>`).join('');
+    const out = (dash ? buildDashReports : buildReports)(M, { day: day.n, generated: gd });
     const th = out.theme;
     document.querySelectorAll('.report').forEach(el => {
       el.style.cssText = `--hFrom:${th.headerFrom};--hMid:${th.headerMid};--hTo:${th.headerTo};--brand:${th.brand};--brandStrong:${th.brandStrong};--brandSoft:${th.brandSoft};--rule:${th.rule};--badge:${th.badge};--hl:${th.highlight};--vol:${th.volunteer};--zoom:${$('zoom').value / 100}`;
+      el.classList.toggle('dash', dash);
     });
+    /* The printed page follows the style: landscape for classic, portrait for dashboard. */
+    let ps = document.getElementById('pageSize');
+    if (!ps) { ps = document.createElement('style'); ps.id = 'pageSize'; document.head.appendChild(ps); }
+    ps.textContent = `@page { size: A4 ${dash ? 'portrait' : 'landscape'}; margin: 0; }`;
     $('rep-avoc').innerHTML = out.avoc;
     $('rep-audit').innerHTML = out.audit;
     applyEdits();
+    runFit();
     $('empty').hidden = true;
     $('nAvoc').textContent = `· ${$('rep-avoc').children.length} pages`;
     $('nAudit').textContent = `· ${$('rep-audit').children.length} pages`;
@@ -147,7 +176,21 @@
   }
   window.__bravoBuild = build;
 
-  ['day', 'generated', 'rate', 'reclass'].forEach(id => $(id).addEventListener('change', build));
+  /* Keep every text box inside its card and every page inside the paper (js/fit.js). */
+  function fitNow(reps) {
+    const hid = reps.map(r => r.hidden);
+    reps.forEach(r => { r.hidden = false; });
+    reps.forEach(r => fitReport(r));
+    reps.forEach((r, i) => { r.hidden = hid[i]; });
+  }
+  function runFit() {
+    const reps = [$('rep-avoc'), $('rep-audit')];
+    document.fonts.ready.then(() => Promise.all([...document.querySelectorAll('.report img')].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })))).then(() => { fitNow(reps); window.__bravoFitted = true; });
+  }
+  let fitTimer;
+  document.querySelectorAll('.report').forEach(rep => rep.addEventListener('input', () => { clearTimeout(fitTimer); fitTimer = setTimeout(() => fitNow([rep]), 400); }));
+
+  ['start', 'generated', 'rate', 'reclass', 'style'].forEach(id => $(id).addEventListener('change', build));
   $('build').addEventListener('click', build);
 
   /* ---------- preview controls ---------- */
@@ -163,18 +206,19 @@
 
   /* ---------- PDF via the browser's print ---------- */
   function fileName(kind) {
-    const P = profile(), d = state.M.callDate || new Date(), day = +$('day').value || 1;
+    const P = profile(), d = state.M.callDate || new Date(), day = state.day || 1;
     const mon = d.toLocaleDateString('en-GB', { month: 'short' });
     const surname = P.candidateName.split(' ').slice(-1)[0].toUpperCase();
     const title = P.shortName.split(' ')[0].replace('.', '').toUpperCase();
-    return kind === 'avoc'
+    return (kind === 'avoc'
       ? `DAY_${day}_${String(d.getDate()).padStart(2, '0')}-${mon.toUpperCase()}-${String(d.getFullYear()).slice(2)}_${title}_${surname}_AVOC_REPORT`
-      : `Internal_AUDIT_Report_Daily_Day${day}_${String(d.getDate()).padStart(2, '0')}-${mon}-${d.getFullYear()}`;
+      : `Internal_AUDIT_Report_Daily_Day${day}_${String(d.getDate()).padStart(2, '0')}-${mon}-${d.getFullYear()}`) + ($('style').value === 'dash' ? '_DASHBOARD' : '');
   }
   function printReport(kind) {
     if (!state.M) return;
     const old = document.title;
     document.title = fileName(kind);
+    fitNow([$('rep-' + kind)]);
     document.body.classList.add('print-' + kind);
     const done = () => { document.body.classList.remove('print-' + kind); document.title = old; window.removeEventListener('afterprint', done); };
     window.addEventListener('afterprint', done);
