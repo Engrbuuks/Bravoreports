@@ -188,7 +188,8 @@
     M.avgCall = connected.length ? talkSec / connected.length : 0;
     M.rate = +opts.airtimeRate || profile.airtimeRatePerMinute;
     M.airtime = M.talkMinutes * M.rate;
-    M.costPerDial = dials ? M.airtime / dials : 0;
+    /* Average airtime per dial counts only dials that produced an impression. */
+    M.costPerDial = M.impressions ? M.airtime / M.impressions : 0;
     M.costPerReached = M.impressions ? M.airtime / M.impressions : 0;
     M.costPerSupportive = M.supportive ? M.airtime / M.supportive : 0;
     M.costPerMinute = M.talkMinutes ? M.airtime / M.talkMinutes : 0;

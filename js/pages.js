@@ -196,7 +196,7 @@
       kpi('Supportive voters', fmt(M.supportive), `${pct(M.supportRate, 1)} of voters reached`, '#2EA44F'),
       kpi('Call agents', fmt(agents), `Covering ${M.lgaList.filter(l => l.dials > 0).length} LGAs and ${M.wardList.filter(w => w.dials > 0).length} wards`, X.th.brand),
       kpi('Avg call duration', Math.round(M.avgCall) + 's', `${fmt(M.talkMinutes)} talk minutes in total`, '#3B82F6'),
-      kpi('Airtime used', naira(M.airtime), `${naira(M.costPerDial, 2)} per dial`, '#E0A800'),
+      kpi('Airtime used', naira(M.airtime), `${naira(M.costPerDial, 2)} per dial (impressions only)`, '#E0A800'),
       kpi('Cost per voter reached', naira(M.costPerReached, 2), 'Airtime ÷ voters with an impression', '#E0A800'),
       kpi('Cost per supportive voter', naira(M.costPerSupportive, 2), 'Airtime ÷ Positive + Volunteer', '#E0A800'),
       kpi('Cost per talk minute', naira(M.costPerMinute, 2), 'Airtime ÷ connected minutes', '#E0A800'),
