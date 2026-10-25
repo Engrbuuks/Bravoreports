@@ -4,13 +4,13 @@
   const { esc, pct, fmt, ed, longDate, share } = C.util;
 
   /* ---------- shared chrome ---------- */
-  function bigHeader(M, X, submission) {
+  function bigHeader(M, X, submission, title = 'Voters Engagement') {
     const P = X.P;
     return `<header class="hdr-big">
       <div class="hb-logo"><img src="${P.partyLogo}" alt=""></div>
       <div class="hb-title">
         <div class="eyebrow">Daily Report · Day ${X.day} · ${esc(P.division)}</div>
-        <h1>Voters Engagement</h1>
+        <h1>${esc(title)}</h1>
         <div class="badge">${esc(submission)}</div>
         <div class="const">${esc(P.constituency)}</div>
       </div>
@@ -206,4 +206,6 @@
     audit.push(glancePage(M, X, false), supportPage(M, X, false), sayingPage(M, X, false), audit11(M, X));
     return { avoc: avoc.join(''), audit: audit.join(''), theme: X.th };
   };
+  /* Shared with the sentiment report (js/pages_sent.js). */
+  window.CLASSIC = { bigHeader, smallHeader, footer, page, card, kpi, panel };
 })();

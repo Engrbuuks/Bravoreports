@@ -27,9 +27,20 @@
     }
     return !over();
   }
+  /* Leaves out one item at a time, always from the group (parent box) that
+     still shows the most, so every group keeps at least one example. */
   function drop(scope, over) {
-    const items = [...scope.querySelectorAll('[data-drop]')].filter(el => !el.dataset.dropped);
-    while (over() && items.length > 1) { const el = items.pop(); el.dataset.dropped = '1'; el.style.display = 'none'; }
+    const visible = () => [...scope.querySelectorAll('[data-drop]')].filter(el => !el.dataset.dropped);
+    while (over()) {
+      const items = visible();
+      if (items.length <= 1) break;
+      const groups = new Map();
+      items.forEach(el => { const g = el.parentElement; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(el); });
+      const biggest = [...groups.values()].sort((a, b) => b.length - a.length)[0];
+      if (biggest.length <= 1 && groups.size > 1 && items.length <= groups.size) break;
+      const el = biggest[biggest.length - 1];
+      el.dataset.dropped = '1'; el.style.display = 'none';
+    }
     return !over();
   }
   function fitScope(scope, over) {

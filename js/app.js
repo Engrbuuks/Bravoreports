@@ -166,12 +166,17 @@
     ps.textContent = `@page { size: A4 ${dash ? 'portrait' : 'landscape'}; margin: 0; }`;
     $('rep-avoc').innerHTML = out.avoc;
     $('rep-audit').innerHTML = out.audit;
+    const sent = buildSentimentReport(M, { day: day.n, generated: gd, style: dash ? 'dash' : 'classic', register: $('register').checked });
+    state.S = sent.S;
+    $('rep-sent').innerHTML = sent.html || '<p class="sent-empty">No feedback in this file carried an opinion, so there is nothing to analyse.</p>';
     applyEdits();
     runFit();
     $('empty').hidden = true;
     $('nAvoc').textContent = `· ${$('rep-avoc').children.length} pages`;
     $('nAudit').textContent = `· ${$('rep-audit').children.length} pages`;
+    $('nSent').textContent = sent.html ? `· ${$('rep-sent').children.length} pages` : '';
     $('pdfAvoc').disabled = $('pdfAudit').disabled = false;
+    $('pdfSent').disabled = $('csvSent').disabled = !sent.html;
     showTab(state.tab);
   }
   window.__bravoBuild = build;
@@ -184,13 +189,13 @@
     reps.forEach((r, i) => { r.hidden = hid[i]; });
   }
   function runFit() {
-    const reps = [$('rep-avoc'), $('rep-audit')];
+    const reps = [$('rep-avoc'), $('rep-audit'), $('rep-sent')];
     document.fonts.ready.then(() => Promise.all([...document.querySelectorAll('.report img')].map(im => im.complete ? 0 : new Promise(r => { im.onload = im.onerror = r; })))).then(() => { fitNow(reps); window.__bravoFitted = true; });
   }
   let fitTimer;
   document.querySelectorAll('.report').forEach(rep => rep.addEventListener('input', () => { clearTimeout(fitTimer); fitTimer = setTimeout(() => fitNow([rep]), 400); }));
 
-  ['start', 'generated', 'rate', 'reclass', 'style'].forEach(id => $(id).addEventListener('change', build));
+  ['start', 'generated', 'rate', 'reclass', 'style', 'register'].forEach(id => $(id).addEventListener('change', build));
   $('build').addEventListener('click', build);
 
   /* ---------- preview controls ---------- */
@@ -199,6 +204,7 @@
     document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
     $('rep-avoc').hidden = t !== 'avoc' || !state.M;
     $('rep-audit').hidden = t !== 'audit' || !state.M;
+    $('rep-sent').hidden = t !== 'sent' || !state.M;
   }
   document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => showTab(b.dataset.tab)));
   $('zoom').addEventListener('input', () => document.querySelectorAll('.report').forEach(el => el.style.setProperty('--zoom', $('zoom').value / 100)));
@@ -210,6 +216,7 @@
     const mon = d.toLocaleDateString('en-GB', { month: 'short' });
     const surname = P.candidateName.split(' ').slice(-1)[0].toUpperCase();
     const title = P.shortName.split(' ')[0].replace('.', '').toUpperCase();
+    if (kind === 'sent') return `Sentiment_Analysis_Report_Day${day}_${String(d.getDate()).padStart(2, '0')}-${mon}-${d.getFullYear()}` + ($('style').value === 'dash' ? '_DASHBOARD' : '');
     return (kind === 'avoc'
       ? `DAY_${day}_${String(d.getDate()).padStart(2, '0')}-${mon.toUpperCase()}-${String(d.getFullYear()).slice(2)}_${title}_${surname}_AVOC_REPORT`
       : `Internal_AUDIT_Report_Daily_Day${day}_${String(d.getDate()).padStart(2, '0')}-${mon}-${d.getFullYear()}`) + ($('style').value === 'dash' ? '_DASHBOARD' : '');
@@ -226,4 +233,23 @@
   }
   $('pdfAvoc').addEventListener('click', () => printReport('avoc'));
   $('pdfAudit').addEventListener('click', () => printReport('audit'));
+  $('pdfSent').addEventListener('click', () => printReport('sent'));
+
+  /* ---------- every classified note as a spreadsheet ---------- */
+  $('csvSent').addEventListener('click', () => {
+    const S = state.S; if (!S) return;
+    const label = k => { const all = [...S.posThemes, ...S.negThemes]; const t = all.find(x => x.key === k); return t ? t.label : k; };
+    const cls = k => ([...R.impressionClasses, ...R.nonImpressionClasses].find(c => c.key === k) || {}).label || k;
+    const rows = S.items.map(i => ({
+      'Date': i.rec.when ? i.rec.when.toLocaleString('en-GB') : '', 'Agent': i.agent, 'LGA': i.lga, 'Ward': i.wardLabel, 'Polling unit': i.rec.pu,
+      'Call outcome': cls(i.cls), 'Feedback (as typed)': i.raw, 'Feedback (cleaned)': i.text, 'Sentiment': i.label === 'positive' ? 'Positive' : 'Negative',
+      'Score': i.score.toFixed(2), 'Confidence': i.confidence, 'Decided from': i.basis === 'stance' ? 'Clear statement of support or opposition' : i.basis === 'words' ? 'Words in the note' : 'Call outcome (no opinion words)',
+      'Mixed': i.mixed ? 'Yes' : 'No', 'Theme': label(i.theme), 'Words found': i.hits.map(h => h.term).join('; ')
+    }));
+    const csv = '\ufeff' + Papa.unparse(rows);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = fileName('sent').replace('_Report', '_Feedback') + '.csv';
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  });
 })();

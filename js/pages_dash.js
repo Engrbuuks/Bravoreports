@@ -163,12 +163,12 @@
     const P = X.P, nav = S.nav;
     const navHtml = nav.map((n, k) => `<div class="${k === i ? 'on' : ''}">${icon(n.icon, 13)}<span>${esc(n.label)}</span>${n.badge ? `<i>${n.badge}</i>` : ''}</div>`).join('');
     const face = P.candidateFace || P.candidateImage;
-    const top = i === 0
+    const top = i === 0 && !head.small
       ? `<header class="dhb">
           <div class="logo"><img src="${P.partyLogo}" alt=""></div>
           <div class="tt">
             <div class="ey">Daily Report · Day ${X.day} · ${esc(P.division)}</div>
-            <h1>Voters Engagement</h1>
+            <h1>${esc(head.bigTitle || 'Voters Engagement')}</h1>
             <div class="sub"><span class="badge">${esc(S.submission)}</span><span class="const">${esc(P.constituency)}</span></div>
           </div>
           <div class="dates"><div><span>Call date</span><b>${longDate(M.callDate)}</b></div><div><span>Report generated</span><b>${longDate(X.generated)}</b></div><i>● LIVE · DAILY</i></div>
@@ -198,7 +198,7 @@
       </aside>
       <div class="dmain">
         ${body}
-        <div class="dfoot"><div><b>${esc(S.submission)}</b> · ${esc(P.division)} · ${esc(P.constituency)} · Day ${X.day} Daily Report</div><div>Bravo AEMS · Confidential · Page ${i + 1} of ${nav.length}</div></div>
+        <div class="dfoot"><div><b>${esc(S.submission)}</b> · ${esc(P.division)} · ${esc(P.constituency)} · Day ${X.day} Daily Report</div><div>Bravo AEMS · Confidential · Page ${head.pageNo || i + 1} of ${head.pages || nav.length}</div></div>
       </div>
     </section>`;
   }
@@ -360,9 +360,12 @@
     return shell(M, X, S, i, { eyebrow: 'Ward deep dive', title: 'Impression mix by ward' }, body);
   }
 
+  function setTheme(X) { ACC = X.th.rule; ACC2 = X.th.headerMid; PRI = X.th.brand; SOFT = mix(X.th.rule, .1); }
+  /* Shared with the sentiment report (js/pages_sent.js). */
+  window.DASH = { shell, card, hero, big, splitPct, prog, mini, redText, banner, dLine, dBars, dDonut, icon, iconCircle, initials, abbr, setTheme, colors: () => ({ ACC, ACC2, PRI, SOFT }) };
   window.buildDashReports = function (M, opts) {
     const X = C.ctx(M, opts);
-    ACC = X.th.rule; ACC2 = X.th.headerMid; PRI = X.th.brand; SOFT = mix(X.th.rule, .1);
+    setTheme(X);
     const gs = M.grievances.reduce((a, g) => a + g.total, 0);
     const below = M.agents.filter(a => a.dials < M.teamAvgDials * 0.8).length;
     const vNav = [{ icon: 'grid', label: 'Overview' }, { icon: 'pin', label: 'Ward support' }, { icon: 'chat', label: 'Voter voices', badge: gs || '' }];

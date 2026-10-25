@@ -1,0 +1,47 @@
+/* Sentiment report: theme cards, statements and the feedback register (both styles). */
+
+/* classic */
+.page .thgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.page .thcard { background: #F7F7FB; border-left: 4px solid var(--tc); border-radius: 8px; padding: 8px 11px 6px; min-width: 0; overflow: hidden; }
+.page .thcard .th { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.page .thcard .th b { font-size: 11.5px; color: var(--brandStrong); line-height: 1.25; }
+.page .thcard .th span { font-size: 9.5px; font-weight: 600; color: var(--tc); white-space: nowrap; }
+.page .thcard .ts { font-size: 8.8px; color: var(--mute); margin: 1px 0 5px; }
+.page .stm { background: #fff; border-radius: 5px; padding: 5px 8px; margin-bottom: 5px; border: 1px solid #ECEAF3; }
+.page .stm .st { font-size: 10px; line-height: 1.42; font-style: italic; color: var(--ink); }
+.page .stm .sm { font-size: 8.4px; color: var(--mute); margin-top: 1px; }
+.page .stm .sm b { color: var(--brand); font-weight: 600; }
+.page .stlist { display: flex; flex-direction: column; }
+.page .reg { padding: 10px 12px; }
+.regt { width: 100%; border-collapse: collapse; }
+.page .regt { font-size: 9.6px; line-height: 1.3; }
+.page .regt th { background: var(--brandStrong); color: #fff; font-weight: 600; text-align: left; padding: 4px 6px; font-size: 8.6px; letter-spacing: .04em; }
+.page .regt td { padding: 3px 6px; border-bottom: 1px solid #ECEAF3; vertical-align: top; }
+.regt td:not(.c1), .regt th:not(.c1) { white-space: nowrap; }
+.regt .c1 { width: 70%; }
+.regt tr.gh td { font-weight: 700; padding-top: 6px; padding-bottom: 4px; }
+.regt tr.gh i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; transform: translateY(0); }
+.regt tr.gh.positive td { color: #17733A; background: #EAF6EE; }
+.regt tr.gh.negative td { color: #B01F31; background: #FDECEE; }
+.regt tr.gh.positive i { background: #22A04B; }
+.regt tr.gh.negative i { background: #E23B4E; }
+.regt tr.gh span { font-weight: 400; margin-left: 8px; opacity: .85; }
+
+/* dashboard */
+.dpage .dthgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+.dpage .dthcard { background: #fff; border: 1px solid var(--dline); border-top: 3px solid var(--tc); border-radius: 14px; padding: 10px 12px 6px; min-width: 0; overflow: hidden; box-shadow: 0 4px 14px rgba(20, 40, 100, .05); }
+.dpage .dthcard .th { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.dpage .dthcard .th b { font-size: 10.6px; font-weight: 600; color: var(--dink); line-height: 1.3; }
+.dpage .dthcard .th span { font-size: 8.6px; font-weight: 600; color: var(--tc); white-space: nowrap; }
+.dpage .dthcard .ts { font-size: 7.8px; color: var(--dmute); margin: 1px 0 6px; }
+.dpage .stm { background: var(--priSoft); border-radius: 8px; padding: 6px 9px; margin-bottom: 6px; }
+.dpage .stm .st { font-size: 8.6px; line-height: 1.45; font-style: italic; color: #2E3448; }
+.dpage .stm .sm { font-size: 7.4px; color: var(--dmute); margin-top: 2px; }
+.dpage .stm .sm b { color: var(--pri); font-weight: 600; }
+.dpage .stlist { display: flex; flex-direction: column; }
+.dpage .regt { font-size: 8.4px; line-height: 1.32; }
+.dpage .regt th { background: var(--pri); color: #fff; font-weight: 500; text-align: left; padding: 5px 6px; font-size: 7.6px; }
+.dpage .regt th:first-child { border-radius: 8px 0 0 8px; }
+.dpage .regt th:last-child { border-radius: 0 8px 8px 0; }
+.dpage .regt td { padding: 3px 6px; border-bottom: 1px solid var(--dline); vertical-align: top; }
+.dpage .regt tr.gh td { border-radius: 6px; }

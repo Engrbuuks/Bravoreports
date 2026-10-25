@@ -72,9 +72,11 @@ button.primary { width: 100%; background: var(--accent); color: #fff; border: 0;
   .main, .stage { display: block; overflow: visible; padding: 0; }
   .report { zoom: 1 !important; }
   .report[hidden] { display: none !important; }
-  body.print-avoc #rep-audit, body.print-audit #rep-avoc { display: none !important; }
-  body.print-avoc #rep-avoc, body.print-audit #rep-audit { display: block !important; }
+  body[class*='print-'] .report { display: none !important; }
+  body.print-avoc #rep-avoc, body.print-audit #rep-audit, body.print-sent #rep-sent { display: block !important; }
   .stage .page, .stage .dpage { margin: 0; box-shadow: none; }
   .editing .ed:hover, .editing .ed:focus { box-shadow: none !important; }
 }
 input[readonly] { background: #F4F2F9; color: var(--accent); font-weight: 600; }
+.dl button.ghost { border-color: var(--uiLine); color: var(--ui); font-weight: 500; }
+.sent-empty { max-width: 520px; margin: 60px auto; text-align: center; color: var(--uiMute); font-size: 14px; }

@@ -1,14 +1,22 @@
 # Bravo Daily Report Generator
 
-A web page that turns the application's **CallSessions CSV export** into the two daily reports:
+A web page that turns the application's **CallSessions CSV export** into three daily reports:
 
 * **Client report (AVOC)**: 3 pages. Engagement at a glance, Where support is strongest, What voters are saying.
 * **Internal audit**: 10 pages, or 11 when a telco match file is supplied. It covers KPIs and funnel, call outcomes, time analysis, call partner output, league table, the 30 minute activity heatmap, the gender and tier profile, the three candidate pages and the ward deep dive.
 
-Both reports come in two styles, chosen under **Report style**:
+* **Sentiment analysis**: 5 pages plus the feedback register. Every piece of feedback is read and labelled **Positive** or **Negative**, then grouped into readable themes:
+  * Sentiment at a glance: positive and negative counts, net sentiment, sentiment index (0 to 100), how strongly voters feel, sentiment by LGA, and how far feedback agrees with call coding.
+  * Where and when: sentiment by ward, through the day, and against the call outcome agents chose.
+  * What drives positive sentiment and what drives negative sentiment: themes with charts and the actual comments, cleaned for reading, with repeats and near repeats counted once ("Said by 42 voters").
+  * Words, topics and action: the words behind each side, the topics voters raise, supporters who raised a concern, calls whose coding looks wrong, and recommendations.
+  * Feedback register: every distinct comment, grouped by sentiment and theme (can be switched off).
+  * **Download all feedback with sentiment (CSV)** gives every classified note with its score, confidence, theme and the words that decided it.
+
+All three reports come in two styles, chosen under **Report style**:
 
 * **Classic (landscape)**: the original Bravo layout.
-* **Dashboard (portrait)**: a web dashboard look with a sidebar, rounded cards and a coral accent.
+* **Dashboard (portrait)**: a web dashboard look with a sidebar, rounded cards and the centre's campaign colours.
 
 The two styles draw every number and every sentence from the same place (`js/content.js`), so they always agree. Text you edit in one style carries over if you switch to the other.
 
@@ -87,9 +95,23 @@ js/content.js         the KPI lists, tables and written commentary shared by bot
 js/pages.js           classic style page layouts
 js/pages_dash.js      dashboard style page layouts
 js/fit.js             keeps every text box inside its card and every page on the paper
+js/sentiment.js       the sentiment engine: word and phrase lists, negation, themes
+js/pages_sent.js      the sentiment report in both styles
+css/sent.css          sentiment report cards and register
 css/dash.css          the dashboard style design
 js/app.js             file loading, settings, PDF download
 samples/              synthetic Calabar export and telco file for testing
 ```
 
 The files in `samples/` are **synthetic**. They exist only to show what the reports look like at full scale. Delete them before sharing if you prefer.
+
+## How sentiment is decided
+
+`js/sentiment.js` reads each note in this order:
+
+1. **Clear stance first.** A pledge ("will vote for him", "na our man") makes the note Positive; refusing or naming another party ("will not vote", "PDP") makes it Negative. Side remarks in the same note are kept as a concern, so "will vote, but the road is bad" counts as a supporter with a concern (Mixed).
+2. **Words and phrases.** Otherwise each note is scored from the positive and negative word and phrase lists, including Nigerian English and Pidgin. Negation is handled ("not happy" is negative, "not bad" is positive), and "very", "really" and so on strengthen the next word.
+3. **Call outcome as a fallback.** A note with no opinion words takes its label from the call outcome and is marked low confidence.
+4. **No opinion.** Notes that only record call handling ("call back", "network is bad", "wrong number") are counted separately and not labelled.
+
+To teach it new expressions, add them to `PHRASES` or `WORDS` (positive numbers for positive, negative numbers for negative), or to the theme keyword lists.

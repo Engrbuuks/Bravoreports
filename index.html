@@ -7,6 +7,7 @@
 <link rel="icon" href="assets/common/bravo.png">
 <link rel="stylesheet" href="css/report.css">
 <link rel="stylesheet" href="css/dash.css">
+<link rel="stylesheet" href="css/sent.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
@@ -46,6 +47,7 @@
         <label>Report style<select id="style"><option value="classic">Classic (landscape)</option><option value="dash">Dashboard (portrait)</option></select></label>
       </div>
       <label class="check"><input type="checkbox" id="reclass" checked> Screen FOLLOW UP and NEGATIVE calls by their feedback</label>
+      <label class="check"><input type="checkbox" id="register" checked> Include the full feedback register in the sentiment report</label>
     </section>
 
     <section class="step">
@@ -53,6 +55,8 @@
       <div class="dl">
         <button id="pdfAvoc" disabled>Download client report (PDF)</button>
         <button id="pdfAudit" disabled>Download internal audit (PDF)</button>
+        <button id="pdfSent" disabled>Download sentiment analysis (PDF)</button>
+        <button id="csvSent" class="ghost" disabled>Download all feedback with sentiment (CSV)</button>
       </div>
       <p class="note">In the print window choose <b>Save as PDF</b>, layout <b>Landscape</b> for the classic style or <b>Portrait</b> for the dashboard style, margins <b>None</b> and tick <b>Background graphics</b>.</p>
     </section>
@@ -62,7 +66,7 @@
 
   <main class="main">
     <div class="bar">
-      <div class="tabs"><button data-tab="avoc" class="on">Client report <small id="nAvoc"></small></button><button data-tab="audit">Internal audit <small id="nAudit"></small></button></div>
+      <div class="tabs"><button data-tab="avoc" class="on">Client report <small id="nAvoc"></small></button><button data-tab="audit">Internal audit <small id="nAudit"></small></button><button data-tab="sent">Sentiment analysis <small id="nSent"></small></button></div>
       <div class="tools">
         <label class="check"><input type="checkbox" id="editMode" checked> Highlight editable text</label>
         <label>Zoom <input type="range" id="zoom" min="40" max="110" value="75"></label>
@@ -77,6 +81,7 @@
       </div>
       <div class="report editing" id="rep-avoc" data-report="avoc"></div>
       <div class="report editing" id="rep-audit" data-report="audit" hidden></div>
+      <div class="report editing" id="rep-sent" data-report="sent" hidden></div>
     </div>
   </main>
 </div>
@@ -89,6 +94,8 @@
 <script src="js/content.js"></script>
 <script src="js/pages.js"></script>
 <script src="js/pages_dash.js"></script>
+<script src="js/sentiment.js"></script>
+<script src="js/pages_sent.js"></script>
 <script src="js/fit.js"></script>
 <script src="js/app.js"></script>
 </body>
