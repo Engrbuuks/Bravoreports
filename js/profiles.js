@@ -73,5 +73,33 @@ window.PROFILES = [
       { name: 'Ilorin West', color: '#5B12C9' },
       { name: 'Asa', color: '#2EA44F' }
     ]
+  },
+  {
+    id: 'onyejeocha',
+    label: 'Hon. Nkeiruka Onyejeocha (Umuahia)',
+    candidateTitle: 'Honorable',
+    candidateName: 'Nkeiruka Onyejeocha',
+    shortName: 'Hon. Onyejeocha',
+    submissionLabel: "Onyejeocha's Submission",
+    auditSubmissionLabel: "Bravo's Submission",
+    division: 'Voters Engagement Division',
+    constituency: 'Isikwuato/Umuneochi Federal Constituency',
+    partyLogo: 'assets/common/apc.png',
+    candidateImage: 'assets/profiles/onyejeocha/portrait.jpg',
+    candidateFace: 'assets/profiles/onyejeocha/face.jpg',
+    callStartDate: '2026-11-16',
+    candidateImageStyle: 'framed',
+    network: 'MTN',
+    airtimeRatePerMinute: 10.17,
+    theme: {
+      headerFrom: '#06502F', headerMid: '#0A6B41', headerTo: '#13925B',
+      brand: '#0A6B41', brandStrong: '#073B3A', brandSoft: '#E6F4EC',
+      rule: '#0B2A7A', badge: '#073B3A', highlight: '#2DD889',
+      volunteer: '#0B2A7A'
+    },
+    lgas: [
+      { name: 'Isuikwuato', color: '#0A6B41' },
+      { name: 'Umunneochi', color: '#0B2A7A' }
+    ]
   }
 ];

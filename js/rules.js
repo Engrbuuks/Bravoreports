@@ -74,7 +74,7 @@ window.RULES = {
     { label: 'Empowerment not reaching them', kw: ['not reach', "didn't reach", 'did not reach', 'never benefit', 'not benefit', "didn't benefit", 'did not benefit', 'only leaders', 'ward leaders', 'leaders and followers', 'shared among', 'hijack', 'cornered', 'we never get', 'never received', 'not received', 'stops with'] },
     { label: 'No visible project in area', kw: ['no project', 'nothing in', 'nothing for', 'not seen anything', "haven't seen", 'have not seen', 'no development', 'abandoned', 'nothing done'] },
     { label: 'Feels ignored / unresponsive office', kw: ['ignored', 'neglect', 'not responsive', 'unresponsive', 'never answer', 'no response', 'forgotten', 'abandon us', 'does not pick', "doesn't pick"] },
-    { label: 'Unfulfilled promises', kw: ['promise', 'promised', 'fulfil', 'fulfill', 'lied', 'lies', 'deceive', 'deceived'] },
+    { label: 'Unfulfilled promises', kw: ['broken promise', 'empty promise', 'failed promise', 'unfulfilled', 'did not fulfil', 'did not fulfill', 'not fulfil', 'not fulfill', 'never fulfil', 'never fulfill', 'promised but', 'promised us', 'promised them', 'promise was not', 'lied', 'deceive', 'deceived'] },
     { label: 'Party / governance discontent', kw: ['party', 'government', 'governance', 'hardship', 'economy', 'tinubu', 'price', 'suffering', 'bad leadership'] }
   ],
 

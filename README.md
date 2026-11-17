@@ -27,7 +27,7 @@ Everything runs in the browser. The call file is never uploaded anywhere, so vot
 ## Using it (team leads)
 
 1. Open the site.
-2. Pick the centre (for example *Sen. Asuquo Ekpenyong (Calabar)*).
+2. Pick the centre (for example *Sen. Asuquo Ekpenyong (Calabar)* or *Hon. Nkeiruka Onyejeocha (Umuahia)*).
 3. Drop the day's CallSessions CSV onto the upload box.
 4. Check the settings:
    * Calls started on (the first day of live calls; set per centre in `js/profiles.js` and editable here). The Day number is worked out from it automatically, counting Monday to Saturday, since Sunday is free.
