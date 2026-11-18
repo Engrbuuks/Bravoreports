@@ -64,7 +64,7 @@
         ${card(ttl, many ? 'Impression mix by LGA · highest support first' : 'Impression mix by LGA', `<div class="stackwrap">${stack}</div>${many ? '' : `<div class="lgacards">${lgaCards}</div>`}`)}
       </div>
       ${panel(`What Day ${X.day} tells us`, prefix + 'tells', C.T.tells(M, X), 'wide')}
-      <div class="defs">${C.H.defs(X)}</div>`;
+      ${prefix === 'v' ? C.H.statusStrip(M, X) : `<div class="defs">${C.H.defs(X)}</div>`}`;
   }
 
   /* ---------- where support is strongest (AVOC 2 / audit 9) ---------- */
@@ -205,7 +205,7 @@
       <div class="row g-status">
         ${card('Call status breakdown', 'Every status exactly as the application recorded it', C.H.statusTable(M, X))}
         ${panel('Reading the statuses', avoc ? 'vst' : 'ast', C.T.status(M, X))}
-      </div></div>` + footer(M, X, sub));
+      </div>${avoc ? `<div class="defs">${C.H.defs(X)}</div>` : ''}</div>` + footer(M, X, sub));
   }
 
   window.buildReports = function (M, opts) {

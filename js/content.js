@@ -293,6 +293,12 @@
     const dense = M.statusTally.length > 14 ? ' dense' : '';
     return `<table class="stab ${cls}${dense}"><tr><th class="sn">Status recorded</th><th>Calls</th><th class="sb">Share of all dials</th>${lgas.map(l => `<th>${esc(l)}</th>`).join('')}<th class="sc">Counted in this report as</th></tr>${rows}${tot}</table>`;
   };
+  /* Every status and its real recorded count, as one strip for the front page. */
+  H.statusStrip = (M, X) => {
+    const col = k => (X.allClasses.find(c => c.key === k) || {}).color || '#8A8F9C';
+    const chips = M.statusTally.map(t => `<span class="sch"><i style="background:${col(t.orig)}"></i>${esc(t.key)} <b>${fmt(t.n)}</b></span>`).join('');
+    return `<div class="sstrip"><div class="sst">Calls by status <small>as recorded</small></div><div class="schips">${chips}<span class="sch tot">ALL CALLS <b>${fmt(M.dials)}</b></span></div></div>`;
+  };
   H.statusKpis = (M, X) => {
     const top = M.statusTally[0];
     return [

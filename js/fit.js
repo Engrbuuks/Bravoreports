@@ -48,7 +48,8 @@
   /* Last resort: zoom the children of a box so charts and tables shrink with the text. */
   function zoomFit(box, over) {
     const kids = [...box.children].filter(k => getComputedStyle(k).position !== 'absolute');
-    for (let z = 0.96; z >= 0.5 - 1e-6 && over(); z -= 0.04) kids.forEach(k => { k.style.zoom = z.toFixed(2); k.dataset.zoomed = '1'; });
+    const start = Math.min(1, ...kids.map(k => parseFloat(k.style.zoom) || 1));
+    for (let z = start - 0.03; z >= 0.5 - 1e-6 && over(); z -= 0.03) kids.forEach(k => { k.style.zoom = z.toFixed(2); k.dataset.zoomed = '1'; });
     return !over();
   }
   function fitScope(scope, over, box) {
@@ -69,5 +70,7 @@
       const area = page.querySelector('.dmain') || page.querySelector('.body');
       if (area) fitScope(page, overflowing(area), area);
     });
+    /* A page that was scaled changes the size of its boxes, so check every box once more. */
+    rep.querySelectorAll(BOXES).forEach(box => { const over = overflowing(box); if (over()) zoomFit(box, over); });
   };
 })();

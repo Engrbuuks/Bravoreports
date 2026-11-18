@@ -240,6 +240,7 @@
         ${card('Voters engaged by LGA', '▾Day ' + X.day, lgaBars)}
         ${card('Voice of the voters', 'From feedback', `<div class="dmsgs">${quotes}</div>`)}
       </div>
+      ${prefix === 'v' ? `<div class="dc dstrip">${C.H.statusStrip(M, X)}</div>` : ''}
       ${F.biggest ? banner(`Keep the momentum in ${esc(F.biggest.key)}`, `${fmt(F.biggest.persuadable)} undecided and call back voters there are the biggest pool to convert.`, `Day ${X.day + 1} call list`) : ''}
 `;
     return shell(M, X, S, i, { eyebrow: `Daily report · Day ${X.day}`, title: 'Engagement at a glance' }, body);
