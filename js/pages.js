@@ -198,10 +198,20 @@
     return page('p-saying', smallHeader(M, X, 'Candidate performance', 'What voters are saying', sub) + `<div class="body">${sayingBody(M, X, avoc ? 'v3' : 'a10')}</div>` + footer(M, X, sub));
   }
 
+  function statusPage(M, X, avoc) {
+    const sub = avoc ? X.P.submissionLabel : X.P.auditSubmissionLabel;
+    return page('p-status', smallHeader(M, X, 'Call statuses', 'Every call, by status', sub) + `<div class="body">
+      <div class="kpis six">${C.H.statusKpis(M, X).map(kpi).join('')}</div>
+      <div class="row g-status">
+        ${card('Call status breakdown', 'Every status exactly as the application recorded it', C.H.statusTable(M, X))}
+        ${panel('Reading the statuses', avoc ? 'vst' : 'ast', C.T.status(M, X))}
+      </div></div>` + footer(M, X, sub));
+  }
+
   window.buildReports = function (M, opts) {
     const X = C.ctx(M, opts);
-    const avoc = [glancePage(M, X, true), supportPage(M, X, true), sayingPage(M, X, true)];
-    const audit = [audit1(M, X), audit2(M, X), audit3(M, X), audit4(M, X), audit5(M, X), audit6(M, X)];
+    const avoc = [glancePage(M, X, true), statusPage(M, X, true), supportPage(M, X, true), sayingPage(M, X, true)];
+    const audit = [audit1(M, X), audit2(M, X), statusPage(M, X, false), audit3(M, X), audit4(M, X), audit5(M, X), audit6(M, X)];
     if (M.hasTelco) audit.push(audit7(M, X));
     audit.push(glancePage(M, X, false), supportPage(M, X, false), sayingPage(M, X, false), audit11(M, X));
     return { avoc: avoc.join(''), audit: audit.join(''), theme: X.th };

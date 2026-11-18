@@ -2,8 +2,8 @@
 
 A web page that turns the application's **CallSessions CSV export** into three daily reports:
 
-* **Client report (AVOC)**: 3 pages. Engagement at a glance, Where support is strongest, What voters are saying.
-* **Internal audit**: 10 pages, or 11 when a telco match file is supplied. It covers KPIs and funnel, call outcomes, time analysis, call partner output, league table, the 30 minute activity heatmap, the gender and tier profile, the three candidate pages and the ward deep dive.
+* **Client report (AVOC)**: 4 pages. Engagement at a glance, Every call by status, Where support is strongest, What voters are saying.
+* **Internal audit**: 11 pages, or 12 when a telco match file is supplied. It covers KPIs and funnel, call outcomes, every call by status, time analysis, call partner output, league table, the 30 minute activity heatmap, the gender and tier profile, the three candidate pages and the ward deep dive.
 
 * **Sentiment analysis**: 5 pages plus the feedback register. Every piece of feedback is read and labelled **Positive** or **Negative**, then grouped into readable themes:
   * Sentiment at a glance: positive and negative counts, net sentiment, sentiment index (0 to 100), how strongly voters feel, sentiment by LGA, and how far feedback agrees with call coding.
@@ -12,6 +12,10 @@ A web page that turns the application's **CallSessions CSV export** into three d
   * Words, topics and action: the words behind each side, the topics voters raise, supporters who raised a concern, calls whose coding looks wrong, and recommendations.
   * Feedback register: every distinct comment, grouped by sentiment and theme (can be switched off).
   * **Download all feedback with sentiment (CSV)** gives every classified note with its score, confidence, theme and the words that decided it.
+
+The **Every call, by status** page lists every status exactly as the application recorded it (POSITIVE, NOT CONNECTED, UNANSWERED, BUSY, REJECTED and so on) with its number of calls, its share of all dials, the split by LGA and the class it is counted under in the report. New statuses appear on it automatically.
+
+Every page is checked after it is built and again before printing. If text, a chart or a table would run past its box or the page, the text is eased down first and then the contents are scaled to fit, so nothing is ever cut off.
 
 All three reports come in two styles, chosen under **Report style**:
 

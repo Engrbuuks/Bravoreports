@@ -256,3 +256,27 @@
   html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
   .page { box-shadow: none !important; margin: 0 !important; }
 }
+
+/* call status page */
+.g-status { grid-template-columns: 1fr 300px; flex: 1; }
+.g-status .card { display: flex; flex-direction: column; }
+.g-status .card .stab { flex: 1; height: 100%; }
+.stab th.sc { color: #fff; }
+.stab { width: 100%; border-collapse: collapse; font-size: 12px; }
+.stab th { background: var(--brandStrong); color: #fff; font-weight: 600; padding: 6px 8px; font-size: 11px; text-align: right; white-space: nowrap; }
+.stab th:first-child { border-radius: 7px 0 0 7px; } .stab th:last-child { border-radius: 0 7px 7px 0; }
+.stab td { padding: 5px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.stab tr:nth-child(even) td { background: color-mix(in srgb, var(--brandSoft) 45%, white); }
+.stab .sn { text-align: left; font-weight: 600; }
+.stab .sn i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 7px; vertical-align: -1px; }
+.stab .sv { font-family: var(--bc); font-weight: 800; font-size: 16px; color: var(--brandStrong); }
+.stab th.sb { text-align: left; }
+.stab td.sb { width: 30%; text-align: left; }
+.stab td.sb div { display: inline-block; width: calc(100% - 52px); height: 11px; background: color-mix(in srgb, var(--brandSoft) 70%, white); border-radius: 6px; overflow: hidden; vertical-align: middle; }
+.stab td.sb span { display: block; height: 100%; border-radius: 6px; }
+.stab td.sb em { font-style: normal; display: inline-block; width: 46px; text-align: right; font-weight: 600; }
+.stab .sc { text-align: left; color: var(--mute); white-space: normal; }
+.stab .sc small { font-size: 9.5px; }
+.stab tr.st td { background: var(--brandSoft) !important; font-weight: 700; border-bottom: 0; border-top: 2px solid var(--brand); }
+.stab.dense { font-size: 10.5px; } .stab.dense td { padding: 3px 7px; } .stab.dense .sv { font-size: 13.5px; }
+.g-status .panel .ed { font-size: 11.6px; }

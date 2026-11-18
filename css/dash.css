@@ -239,3 +239,25 @@
 .dhs .bravo b { font-weight: 700; }
 .dhs .ph { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--acc); flex: none; z-index: 1; }
 .dhs .ph img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+
+/* call status page */
+.dash .dkpis.six { grid-template-columns: repeat(3, 1fr); }
+.dash .dstcard { flex: 1 1 auto; display: flex; flex-direction: column; }
+.dash .dstcard .stab { flex: 1; height: 100%; }
+.dash .stab { width: 100%; border-collapse: collapse; font-size: 8.8px; }
+.dash .stab th { background: var(--pri); color: #fff; font-weight: 600; padding: 5px 6px; font-size: 8.2px; text-align: right; white-space: nowrap; }
+.dash .stab th:first-child { border-radius: 8px 0 0 8px; } .dash .stab th:last-child { border-radius: 0 8px 8px 0; }
+.dash .stab td { padding: 4.5px 6px; border-bottom: 1px solid var(--dline); text-align: right; white-space: nowrap; }
+.dash .stab .sn { text-align: left; font-weight: 600; }
+.dash .stab .sn i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; }
+.dash .stab .sv { font-weight: 700; font-size: 10.5px; }
+.dash .stab th.sb { text-align: left; }
+.dash .stab td.sb { width: 26%; text-align: left; }
+.dash .stab td.sb div { display: inline-block; width: calc(100% - 38px); height: 8px; background: var(--soft, #EEF2F7); border-radius: 5px; overflow: hidden; vertical-align: middle; }
+.dash .stab td.sb span { display: block; height: 100%; border-radius: 5px; }
+.dash .stab td.sb em { font-style: normal; display: inline-block; width: 34px; text-align: right; font-weight: 600; }
+.dash .stab .sc { text-align: left; color: var(--dmute); white-space: normal; }
+.dash .stab .sc small { font-size: 7.4px; }
+.dash .stab tr.st td { font-weight: 700; border-top: 1.5px solid var(--pri); border-bottom: 0; }
+.dash .stab.dense { font-size: 7.8px; } .dash .stab.dense td { padding: 2.6px 5px; }
+.dash .stab th.sc { color: #fff; }

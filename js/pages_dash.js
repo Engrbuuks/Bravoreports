@@ -360,6 +360,14 @@
     return shell(M, X, S, i, { eyebrow: 'Ward deep dive', title: 'Impression mix by ward' }, body);
   }
 
+  function stat(M, X, S, i, prefix) {
+    const body = `
+      <div class="dkpis six">${C.H.statusKpis(M, X).map(kpiTile).join('')}</div>
+      ${card('Call status breakdown', 'As recorded', C.H.statusTable(M, X), 'dstcard')}
+      ${redText('Reading the statuses', `Day ${X.day}`, prefix + 'st', C.T.status(M, X))}`;
+    return shell(M, X, S, i, { eyebrow: 'Call statuses', title: 'Every call, by status' }, body);
+  }
+
   function setTheme(X) { ACC = X.th.rule; ACC2 = X.th.headerMid; PRI = X.th.brand; SOFT = mix(X.th.rule, .1); }
   /* Shared with the sentiment report (js/pages_sent.js). */
   window.DASH = { shell, card, hero, big, splitPct, prog, mini, redText, banner, dLine, dBars, dDonut, icon, iconCircle, initials, abbr, setTheme, colors: () => ({ ACC, ACC2, PRI, SOFT }) };
@@ -368,14 +376,14 @@
     setTheme(X);
     const gs = M.grievances.reduce((a, g) => a + g.total, 0);
     const below = M.agents.filter(a => a.dials < M.teamAvgDials * 0.8).length;
-    const vNav = [{ icon: 'grid', label: 'Overview' }, { icon: 'pin', label: 'Ward support' }, { icon: 'chat', label: 'Voter voices', badge: gs || '' }];
+    const vNav = [{ icon: 'grid', label: 'Overview' }, { icon: 'phone', label: 'Call statuses' }, { icon: 'pin', label: 'Ward support' }, { icon: 'chat', label: 'Voter voices', badge: gs || '' }];
     const VS = { nav: vNav, submission: X.P.submissionLabel };
-    const avoc = [glance(M, X, VS, 0, 'v'), support(M, X, VS, 1, 'v2'), saying(M, X, VS, 2, 'v3')];
-    const aNav = [{ icon: 'grid', label: 'Overview' }, { icon: 'phone', label: 'Call outcomes' }, { icon: 'clock', label: 'Time of day' }, { icon: 'users', label: 'Staff output', badge: below || '' }, { icon: 'list', label: 'League table' }, { icon: 'pulse', label: 'Activity' }];
+    const avoc = [glance(M, X, VS, 0, 'v'), stat(M, X, VS, 1, 'v'), support(M, X, VS, 2, 'v2'), saying(M, X, VS, 3, 'v3')];
+    const aNav = [{ icon: 'grid', label: 'Overview' }, { icon: 'phone', label: 'Call outcomes' }, { icon: 'list', label: 'Call statuses' }, { icon: 'clock', label: 'Time of day' }, { icon: 'users', label: 'Staff output', badge: below || '' }, { icon: 'list', label: 'League table' }, { icon: 'pulse', label: 'Activity' }];
     if (M.hasTelco) aNav.push({ icon: 'person', label: 'Audience' });
     aNav.push({ icon: 'eye', label: 'Candidate view' }, { icon: 'pin', label: 'Ward support' }, { icon: 'chat', label: 'Voter voices', badge: gs || '' }, { icon: 'layers', label: 'Ward deep dive' });
     const AS = { nav: aNav, submission: X.P.auditSubmissionLabel };
-    const pages = [a1, a2, a3, a4, a5, a6];
+    const pages = [a1, a2, (M, X, S, i) => stat(M, X, S, i, 'a'), a3, a4, a5, a6];
     if (M.hasTelco) pages.push(a7);
     const audit = pages.map((f, k) => f(M, X, AS, k));
     let k = audit.length;

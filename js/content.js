@@ -158,6 +158,20 @@
       spread ? (spread[1] - spread[0] > 0.3 ? `Agent coding is inconsistent (support rates of ${pct(spread[0])} to ${pct(spread[1])}); a calibration session is needed.` : `Agent coding is consistent (support rates between ${pct(spread[0])} and ${pct(spread[1])}).`) : ''
     ]);
   };
+  T.status = (M, X) => {
+    const t = M.statusTally, top = t[0];
+    if (!t.length) return 'No calls were recorded.';
+    const reachedSt = t.filter(x => R.impressionClasses.some(c => c.key === x.orig));
+    const notSt = t.filter(x => !R.impressionClasses.some(c => c.key === x.orig));
+    const moved = t.reduce((a, x) => a + x.reclass, 0);
+    return bullets([
+      `We recorded ${hl(fmt(M.dials))} dials under ${bold(fmt(t.length))} statuses. ${hl(fmt(M.impressions))} (${pct(M.reachRate, 1)}) reached a voter and ${bold(fmt(M.nonImpressions))} did not.`,
+      top ? `The most common status was ${bold(esc(top.key))} with ${fmt(top.n)} calls (${pct(share(top.n, M.dials), 1)} of all dials).` : '',
+      reachedSt.length ? `Conversations: ${reachedSt.map(x => `${esc(x.key)} ${bold(fmt(x.n))}`).join(' · ')}.` : '',
+      notSt.length ? `No conversation: ${notSt.map(x => `${esc(x.key)} ${bold(fmt(x.n))}`).join(' · ')}.` : '',
+      moved ? `${bold(fmt(moved))} calls were moved to a different class after reading their feedback, shown beside each status.` : ''
+    ]);
+  };
   T.gap = (M) => {
     const c = M.cls;
     const ratio = c.followup ? (M.nonImpressions / c.followup) : 0;
@@ -267,6 +281,28 @@
     const shade = v => `color-mix(in srgb, ${base} ${Math.round(6 + 90 * Math.min(v / max, 1))}%, white)`;
     const rows = top.map(w => `<tr><td class="an">${esc(w.label)} (${w.imp})</td>${cols.map(c => { const v = share(w.c[c.key], w.imp); return `<td style="background:${shade(v)};color:${v / max > .45 ? '#fff' : '#1C1340'}">${pct(v)}</td>`; }).join('')}</tr>`).join('');
     return `<table class="wheat"><tr><th></th>${cols.map(c => `<th>${c.label}</th>`).join('')}</tr>${rows}</table>`;
+  };
+  /* Every application status with its count, share of dials, LGA split and the class it is counted under. */
+  H.statusTable = (M, X, cls = '') => {
+    const lab = k => (X.allClasses.find(c => c.key === k) || {}).label || k;
+    const col = k => (X.allClasses.find(c => c.key === k) || {}).color || '#8A8F9C';
+    const lgas = M.lgaList.filter(l => l.dials > 0).map(l => l.key);
+    const max = Math.max(1, ...M.statusTally.map(t => t.n));
+    const rows = M.statusTally.map(t => `<tr><td class="sn"><i style="background:${col(t.orig)}"></i>${esc(t.key)}</td><td class="sv">${fmt(t.n)}</td><td class="sb"><div><span style="width:${Math.max(t.n / max * 100, 1.5).toFixed(1)}%;background:${col(t.orig)}"></span></div><em>${pct(share(t.n, M.dials), 1)}</em></td>${lgas.map(l => `<td>${fmt(t.byLga[l] || 0)}</td>`).join('')}<td class="sc">${esc(lab(t.orig))}${t.reclass ? ` <small>(${fmt(t.reclass)} moved on feedback)</small>` : ''}</td></tr>`).join('');
+    const tot = `<tr class="st"><td class="sn">All calls</td><td class="sv">${fmt(M.dials)}</td><td class="sb"><em>100%</em></td>${lgas.map(l => `<td>${fmt((M.lgaList.find(x => x.key === l) || {}).dials || 0)}</td>`).join('')}<td class="sc">${fmt(M.impressions)} reached · ${fmt(M.nonImpressions)} not reached</td></tr>`;
+    const dense = M.statusTally.length > 14 ? ' dense' : '';
+    return `<table class="stab ${cls}${dense}"><tr><th class="sn">Status recorded</th><th>Calls</th><th class="sb">Share of all dials</th>${lgas.map(l => `<th>${esc(l)}</th>`).join('')}<th class="sc">Counted in this report as</th></tr>${rows}${tot}</table>`;
+  };
+  H.statusKpis = (M, X) => {
+    const top = M.statusTally[0];
+    return [
+      ['Total dials', fmt(M.dials), 'Every call attempt recorded today', X.th.brandStrong],
+      ['Statuses recorded', fmt(M.statusTally.length), 'Distinct call statuses in the export', X.th.rule],
+      ['Voters reached', fmt(M.impressions), `${pct(M.reachRate, 1)} of dials became a conversation`, X.th.brand],
+      ['Not reached', fmt(M.nonImpressions), `${pct(share(M.nonImpressions, M.dials), 1)} of dials`, '#4B5263'],
+      ['Most common', top ? esc(top.key) : 'None', top ? `${fmt(top.n)} calls · ${pct(share(top.n, M.dials), 1)}` : '', top ? ((X.allClasses.find(c => c.key === top.orig) || {}).color || '#4B5263') : '#4B5263'],
+      ['Talk time', fmt(Math.round(M.talkMinutes)) + ' min', `Average connected call ${Math.round(M.avgCall)}s`, '#F2A81D']
+    ];
   };
   H.defs = X => X.impClasses.map(cl => `<div class="def"><i style="background:${cl.color}"></i><b>${cl.label}</b> · ${esc(cl.def)}</div>`).join('');
 

@@ -166,6 +166,17 @@
       recs.forEach(x => { const t = opts.telco.get(x.phone.slice(-10)); if (t) { x.gender = t.gender; x.tier = t.tier; } });
     }
     const M = { profile, recs, unknownStatuses, reclassCounts, opts };
+    /* Every status exactly as the application recorded it, with its count. */
+    const stMap = new Map();
+    recs.forEach(x => {
+      const key = (x.statusRaw || 'BLANK').toUpperCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+      let t = stMap.get(key);
+      if (!t) { t = { key, n: 0, byLga: {}, orig: x.orig, reclass: 0, talk: 0, fb: 0 }; stMap.set(key, t); }
+      t.n++; t.byLga[x.lga] = (t.byLga[x.lga] || 0) + 1; t.talk += x.dur;
+      if (x.cls !== x.orig) t.reclass++;
+      if (x.hasFb) t.fb++;
+    });
+    M.statusTally = [...stMap.values()].sort((a, b) => b.n - a.n || a.key.localeCompare(b.key));
     const dials = recs.length;
     M.dials = dials;
     M.cls = zero([...IMP, ...NON]);

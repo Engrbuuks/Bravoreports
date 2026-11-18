@@ -7,7 +7,9 @@
     1. eases the text size down a little,
     2. then leaves out the last quotes (the full set stays on the
        "What voters are saying" page where there is more room),
-    3. then eases the text down a little more.
+    3. then eases the text down a little more,
+    4. and if charts or tables still do not fit, scales the whole contents
+       of the box (or page) down just enough, so nothing is ever cut off.
   It runs after every build, after edits, and right before printing.
 */
 (function () {
@@ -43,21 +45,29 @@
     }
     return !over();
   }
-  function fitScope(scope, over) {
+  /* Last resort: zoom the children of a box so charts and tables shrink with the text. */
+  function zoomFit(box, over) {
+    const kids = [...box.children].filter(k => getComputedStyle(k).position !== 'absolute');
+    for (let z = 0.96; z >= 0.5 - 1e-6 && over(); z -= 0.04) kids.forEach(k => { k.style.zoom = z.toFixed(2); k.dataset.zoomed = '1'; });
+    return !over();
+  }
+  function fitScope(scope, over, box) {
     if (!over()) return;
     if (shrink(scope, over, 0.97, 0.85)) return;
     if (drop(scope, over)) return;
-    shrink(scope, over, 0.82, 0.7);
+    if (shrink(scope, over, 0.82, 0.7)) return;
+    zoomFit(box || scope, over);
   }
-  const overflowing = el => () => el.scrollHeight > el.clientHeight + 1;
+  const overflowing = el => () => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1;
 
   window.fitReport = function (rep) {
     rep.querySelectorAll('[data-fs]').forEach(el => { el.style.fontSize = ''; delete el.dataset.fs; });
     rep.querySelectorAll('[data-dropped]').forEach(el => { el.style.display = ''; delete el.dataset.dropped; });
+    rep.querySelectorAll('[data-zoomed]').forEach(el => { el.style.zoom = ''; delete el.dataset.zoomed; });
     rep.querySelectorAll(BOXES).forEach(box => fitScope(box, overflowing(box)));
     rep.querySelectorAll('.page, .dpage').forEach(page => {
       const area = page.querySelector('.dmain') || page.querySelector('.body');
-      if (area) fitScope(page, overflowing(area));
+      if (area) fitScope(page, overflowing(area), area);
     });
   };
 })();
